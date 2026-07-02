@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Hojas de Validación{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="ph-ic">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+  </div>
+  <div>
+    <div class="eyebrow">Espacio compartido</div>
+    <h1>Hojas de Validación</h1>
+    <p>Todas las hojas del equipo. Cualquiera puede abrir, crear y editar; se registra quién hizo cada cambio.</p>
+  </div>
+  <div class="ph-actions">
+    <form method="post" action="{{ url_for('main.new_project') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn solid" type="submit">+ Nueva Resultado de Validación</button>
+    </form>
+  </div>
+</div>
+
+<form class="toolbar" method="get" action="{{ url_for('main.dashboard') }}">
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+    <input type="search" name="q" value="{{ q }}" placeholder="Buscar por molécula o código…">
+  </div>
+  <button class="btn" type="submit">Buscar</button>
+  {% if q %}<a class="btn ghost" href="{{ url_for('main.dashboard') }}">Limpiar</a>{% endif %}
+  <span class="muted small">{{ projects|length }} hoja{{ '' if projects|length == 1 else 's' }}</span>
+</form>
+
+<div class="docs">
+  {% for p in projects %}
+  <div class="doc">
+    <div class="doc-top">
+      <div class="doc-ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 3h6M10 3v6.5L5.5 18a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9.5V3"/><path d="M8 14h8"/></svg>
+      </div>
+      <div>
+        <div class="doc-mol">{{ p.molecule or 'Hoja sin nombre' }}</div>
+        <div class="doc-cod">{% if p.code %}Código: {{ p.code }}{% else %}<span class="muted">sin código</span>{% endif %}</div>
+      </div>
+    </div>
+    <div class="doc-meta">
+      <span>Unidad <b>{{ p.unit }}</b></span>
+      {% if p.created_by %}<span>Creó <b>{{ p.created_by }}</b></span>{% endif %}
+      {% if p.modified_by %}<span>Editó <b>{{ p.modified_by }}</b></span>{% endif %}
+      <span>{{ p.modified_at.strftime('%d/%m/%Y %H:%M') }}</span>
+    </div>
+    <div class="doc-actions">
+      <a class="btn solid sm" href="{{ url_for('validation.menu', project_id=p.id) }}">Abrir</a>
+      <form method="post" action="{{ url_for('main.delete_project', project_id=p.id) }}"
+            onsubmit="return confirm('¿Eliminar la hoja «{{ p.label }}»? La verán eliminada todos los usuarios.');">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn danger sm" type="submit">Eliminar</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+    <p>{% if q %}No se encontraron hojas que coincidan con «{{ q }}».{% else %}Aún no hay hojas. Crea la primera para empezar.{% endif %}</p>
+    <form method="post" action="{{ url_for('main.new_project') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn solid" type="submit">+ Crear la primera hoja</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

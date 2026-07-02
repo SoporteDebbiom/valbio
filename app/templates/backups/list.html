@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Respaldos{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="ph-ic">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+         stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/>
+      <path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+  </div>
+  <div>
+    <div class="eyebrow">Administración</div>
+    <h1>Respaldos</h1>
+    <p>Copias de seguridad de toda la información. Se generan también de forma automática mientras el equipo trabaja.</p>
+  </div>
+  <div class="ph-actions">
+    <a class="btn" href="{{ url_for('backups.export_now') }}">Descargar respaldo</a>
+    <form method="post" action="{{ url_for('backups.generate') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn solid" type="submit">Generar ahora</button>
+    </form>
+  </div>
+</div>
+
+<div class="notice">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+       stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+  <div>
+    Último respaldo automático:
+    <b>{{ last.strftime('%d/%m/%Y %H:%M') if last else 'todavía ninguno' }}</b> (UTC).
+    En servidores con disco temporal, descarga periódicamente un respaldo o usa una base PostgreSQL para conservar el historial.
+  </div>
+</div>
+
+<div class="tbl-wrap">
+  <table class="grid">
+    <thead><tr><th class="rowlab">Archivo</th><th>Tamaño</th><th>Fecha</th><th>Acciones</th></tr></thead>
+    <tbody>
+      {% for b in backups %}
+      <tr>
+        <td class="rowlab" style="position:static;font-family:var(--mono)">{{ b.name }}</td>
+        <td class="out">{{ b.size_kb }} KB</td>
+        <td class="out">{{ b.modified.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td class="out">
+          <a class="btn sm" href="{{ url_for('backups.download', name=b.name) }}">Descargar</a>
+          <form method="post" action="{{ url_for('backups.restore') }}" style="display:inline"
+                onsubmit="return confirm('Restaurar {{ b.name }} REEMPLAZA todos los datos actuales. ¿Continuar?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="name" value="{{ b.name }}">
+            <button class="btn danger sm" type="submit">Restaurar</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td class="out" colspan="4">No hay respaldos en disco. Genera uno o descárgalo.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

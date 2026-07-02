@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{% block title %}Resultados de Validación{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+{% if current_user.is_authenticated %}
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('main.dashboard') }}">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 3h6M10 3v6.5L5.5 18a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9.5V3"/>
+          <path d="M8 14h8"/></svg>
+      </span>
+      <span class="brand-text">Resultados de Validación<small>Suite bioanalítica</small></span>
+    </a>
+    <nav class="topnav">
+      <a href="{{ url_for('main.dashboard') }}">Hojas</a>
+      <a href="{{ url_for('collab.activity') }}">Actividad</a>
+      {% if current_user.is_admin %}
+        <a href="{{ url_for('auth.users') }}">Usuarios</a>
+        <a href="{{ url_for('backups.index') }}">Respaldos</a>
+      {% endif %}
+    </nav>
+    <div class="userbox">
+      <div class="presence" id="presence">
+        <button class="presence-btn" type="button" id="presenceBtn" aria-haspopup="true">
+          <span class="dot"></span><span id="onlineCount">·</span> en línea
+        </button>
+        <div class="presence-pop" id="presencePop" hidden>
+          <div class="presence-h">Conectados ahora</div>
+          <ul id="onlineList"><li class="muted small">Cargando…</li></ul>
+        </div>
+      </div>
+      <span class="userchip"><b>{{ current_user.username }}</b><em>{{ current_user.role }}</em></span>
+      <a class="btn ghost" href="{{ url_for('auth.logout') }}">Salir</a>
+    </div>
+  </header>
+{% endif %}
+
+<main class="page">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flashes">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+
+{% if current_user.is_authenticated %}
+  <script src="{{ url_for('static', filename='js/presence.js') }}"></script>
+{% endif %}
+{% block scripts %}{% endblock %}
+</body>
+</html>

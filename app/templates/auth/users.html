@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="ph-ic">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+         stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5 6-5s6 1.7 6 5"/>
+      <circle cx="17.5" cy="9" r="2.6"/><path d="M16 14.6c2.6.2 5 1.7 5 5.4"/></svg>
+  </div>
+  <div><div class="eyebrow">Administración</div><h1>Usuarios</h1>
+    <p>Alta y baja de cuentas, con su estado de conexión. Las contraseñas se guardan cifradas.</p></div>
+</div>
+
+<div class="card" style="margin-bottom:20px">
+  <div class="card-h"><h3>Registrar usuario</h3></div>
+  <div class="card-b">
+    <form method="post">
+      {{ form.hidden_tag() }}
+      <div class="grid-fields">
+        <div class="field">{{ form.username.label }}{{ form.username(placeholder="Usuario") }}</div>
+        <div class="field">{{ form.password.label }}{{ form.password(placeholder="Mínimo 6 caracteres") }}</div>
+        <div class="field"><label>Nivel</label>
+          <div style="display:flex;gap:16px;padding-top:6px">
+            {% for sub in form.role %}<label style="font-weight:500;color:var(--ink)">{{ sub }} {{ sub.label.text }}</label>{% endfor %}
+          </div>
+        </div>
+      </div>
+      <button class="btn solid sm" type="submit">Registrar</button>
+    </form>
+  </div>
+</div>
+
+<div class="tbl-wrap">
+  <table class="grid">
+    <thead><tr><th class="rowlab">Usuario</th><th>Estado</th><th>Nivel</th><th>Última actividad</th><th></th></tr></thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td class="rowlab">{{ u.username }}</td>
+        <td class="out">
+          {% if u.online(window) %}<span class="tag ok"><span class="dot"></span>en línea</span>
+          {% else %}<span class="tag neu">desconectado</span>{% endif %}
+        </td>
+        <td class="out">{{ u.role }}</td>
+        <td class="out">{{ u.last_seen.strftime('%d/%m/%Y %H:%M') if u.last_seen else '—' }}</td>
+        <td class="out">
+          {% if u.id == current_user.id %}<span class="muted small">tú</span>
+          {% else %}
+          <form method="post" action="{{ url_for('auth.delete_user', user_id=u.id) }}"
+                onsubmit="return confirm('¿Eliminar a {{ u.username }}?');" style="display:inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn danger sm" type="submit">Eliminar</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

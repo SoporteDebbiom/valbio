@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}{{ module.name }} · {{ project.label }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="ph-ic">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+         stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16"/><path d="M5 15c4 0 5-8 14-10"/></svg>
+  </div>
+  <div>
+    <div class="eyebrow">{{ module.section }}</div>
+    <h1>{{ module.name }}</h1>
+    <p>{{ module.description }}</p>
+  </div>
+  <div class="ph-actions">
+    <div class="dec" title="Decimales mostrados">
+      <span class="muted small">Decimales</span>
+      <button class="dec-btn" type="button" id="decMinus">−</button>
+      <span class="dec-val" id="decVal">{{ project.decimals }}</span>
+      <button class="dec-btn" type="button" id="decPlus">+</button>
+    </div>
+    <a class="btn" href="{{ url_for('validation.menu', project_id=project.id) }}">← Menú</a>
+    <button class="btn" type="button" id="btnImport">Importar de Excel</button>
+    <input type="file" id="xlsxFile" accept=".xlsx,.xlsm" hidden>
+    <button class="btn solid" type="button" id="btnSave">Guardar</button>
+  </div>
+</div>
+
+<div class="xl-sheet">
+  <div class="xl-title">{{ module.name|upper }}</div>
+  <table class="xl-info"><tbody>
+    <tr><td class="k">Molécula:</td><td class="v">{{ project.molecule or '—' }}</td></tr>
+    <tr><td class="k">Código:</td><td class="v">{{ project.code or '—' }}</td></tr>
+    <tr><td class="k">Fecha:</td><td class="v">{{ info.updated_at[:10] if info.updated_at else '—' }}</td></tr>
+  </tbody></table>
+</div>
+<div class="sheet-note">
+  <span class="edit-info" id="importHint"></span>
+  <span class="edit-info" id="editInfo">
+    {% if info.updated_by %}Última edición: <b>{{ info.updated_by }}</b>{% else %}Sin guardar todavía{% endif %}
+  </span>
+</div>
+
+<div id="app-root"
+     data-kind="{{ module.kind }}"
+     data-module="{{ module.id }}"
+     data-unit="{{ project.unit }}"
+     data-version="{{ info.version }}"
+     data-compute-url="{{ url_for('validation.api_compute', project_id=project.id, module_id=module.id) }}"
+     data-save-url="{{ url_for('validation.api_save', project_id=project.id, module_id=module.id) }}"
+     data-import-url="{{ url_for('validation.import_excel', project_id=project.id) }}">
+</div>
+
+<script type="application/json" id="saved-data">{{ saved|tojson }}</script>
+<script type="application/json" id="project-cfg">{{ {'decimals': project.decimals, 'unit': project.unit}|tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

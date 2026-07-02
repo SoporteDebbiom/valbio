@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{ project.label }} · Menú{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div class="ph-ic">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 3h6M10 3v6.5L5.5 18a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9.5V3"/><path d="M8 14h8"/></svg>
+  </div>
+  <div>
+    <div class="eyebrow">Menú de validación</div>
+    <h1>Parámetros de validación</h1>
+    <p>Selecciona un parámetro. Los cálculos (Promedio, CV%, %desv, recobro, regresión, …) se realizan en el servidor con precisión completa.</p>
+  </div>
+  <div class="ph-actions">
+    <a class="btn" href="{{ url_for('validation.report', project_id=project.id) }}">Ver informe</a>
+    <a class="btn solid" href="{{ url_for('validation.report_pdf', project_id=project.id) }}">Descargar PDF</a>
+    <a class="btn ghost" href="{{ url_for('main.dashboard') }}">← Hojas</a>
+  </div>
+</div>
+
+<div class="sheet-bar">
+  <div>
+    <div class="sb-lab">Hoja activa</div>
+    <div class="sb-name">{{ project.label }}</div>
+  </div>
+  <span class="tag neu">ID #{{ project.id }}</span>
+</div>
+
+<div class="card" style="margin-bottom:20px">
+  <div class="card-h"><h3>Información del proyecto</h3><span class="spacer"></span>
+    <span class="muted small">Se aplica a todos los apartados</span></div>
+  <div class="card-b">
+    <form method="post" action="{{ url_for('validation.update_info', project_id=project.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="grid-fields">
+        <div class="field"><label>Molécula</label>
+          <input name="molecule" value="{{ project.molecule }}" placeholder="Nombre del analito"></div>
+        <div class="field"><label>Código del proyecto</label>
+          <input name="code" value="{{ project.code }}" placeholder="Código"></div>
+        <div class="field"><label>Unidad de concentración</label>
+          <select name="unit">
+            {% for u in ['ng/mL','pg/mL','µg/mL'] %}
+              <option value="{{ u }}" {{ 'selected' if project.unit == u }}>{{ u }}</option>
+            {% endfor %}
+          </select></div>
+        <div class="field"><label>Decimales mostrados</label>
+          <input name="decimals" type="number" min="0" max="10" value="{{ project.decimals }}"></div>
+      </div>
+      <button class="btn solid sm" type="submit">Guardar información</button>
+    </form>
+  </div>
+</div>
+
+{% for section, mods in sections.items() %}
+  <div class="section-title"><span class="eyebrow">{{ section }}</span><span class="rule"></span></div>
+  <div class="modules">
+    {% for m in mods %}
+    <a class="mod" href="{{ url_for('validation.module', project_id=project.id, module_id=m.id) }}">
+      <div class="mod-ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16"/><path d="M5 15c4 0 5-8 14-10"/></svg>
+      </div>
+      <h4>{{ m.name }}</h4><p>{{ m.description }}</p>
+    </a>
+    {% endfor %}
+  </div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Informe · {{ project.label }}{% endblock %}
+{% block body_class %}report-mode{% endblock %}
+{% macro verdict(v) -%}
+  {% if v == 'CUMPLE' %}<span class="tag ok">{{ v }}</span>
+  {% elif v == 'NO CUMPLE' %}<span class="tag bad">{{ v }}</span>
+  {% else %}{{ v }}{% endif %}
+{%- endmacro %}
+{% block content %}
+<div class="page-head no-print">
+  <div class="ph-ic">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>
+  </div>
+  <div><div class="eyebrow">Informe</div><h1>Informe de validación</h1>
+    <p>Resumen de los módulos con datos guardados. Imprime o descarga el PDF.</p></div>
+  <div class="ph-actions">
+    <button class="btn" type="button" onclick="window.print()">Imprimir</button>
+    <a class="btn solid" href="{{ url_for('validation.report_pdf', project_id=project.id) }}">Descargar PDF</a>
+  </div>
+</div>
+
+<div class="report-sheet">
+  <div class="rep-head">
+    <div>
+      <h2>Informe de validación bioanalítica</h2>
+      <div class="rep-meta">
+        <span>Molécula: <b>{{ report.molecule }}</b></span>
+        <span>Código: <b>{{ report.code }}</b></span>
+        <span>Unidad: <b>{{ report.unit }}</b></span>
+        <span>Generado: {{ report.generated }}</span>
+      </div>
+    </div>
+  </div>
+
+  {% for s in report.sections %}
+  <section class="rep-sec">
+    <h3>{{ s.section }} — {{ s.name }}</h3>
+    {% for b in s.blocks %}
+      {% if b.type == 'caption' %}
+      <div class="rep-cap">{{ b.text }}</div>
+      {% elif b.type == 'table' and b.rows %}
+      <div class="tbl-wrap">
+        <table class="grid">
+          <thead><tr>{% for h in b.head %}<th{% if loop.first %} class="rowlab"{% endif %}>{{ h }}</th>{% endfor %}</tr></thead>
+          <tbody>
+            {% for row in b.rows %}
+            <tr>{% for cell in row %}
+              {% if loop.first %}<td class="rowlab" style="position:static">{{ cell }}</td>
+              {% else %}<td class="out">{{ verdict(cell) if cell in ['CUMPLE','NO CUMPLE'] else cell }}</td>{% endif %}
+            {% endfor %}</tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% elif b.type == 'kv' %}
+      <div class="rep-kv">
+        {% for k, v in b.items %}<span><em>{{ k }}</em> {{ verdict(v) if v in ['CUMPLE','NO CUMPLE'] else v }}</span>{% endfor %}
+      </div>
+      {% endif %}
+    {% endfor %}
+  </section>
+  {% else %}
+  <p class="muted">Esta hoja todavía no tiene módulos con datos guardados. Captura y guarda algún módulo para generar el informe.</p>
+  {% endfor %}
+</div>
+{% endblock %}

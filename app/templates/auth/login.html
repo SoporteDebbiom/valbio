@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión · Resultados de Validación{% endblock %}
+{% block body_class %}auth-wrap{% endblock %}
+{% block content %}
+<div class="auth-card">
+  <span class="brand-mark" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 3h6M10 3v6.5L5.5 18a2 2 0 0 0 1.8 3h9.4a2 2 0 0 0 1.8-3L14 9.5V3"/>
+      <path d="M8 14h8"/></svg>
+  </span>
+  <h1>Resultados de Validación</h1>
+  <p class="sub">Validación de métodos bioanalíticos</p>
+
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="field">
+      {{ form.username.label }}
+      {{ form.username(placeholder="Usuario", autocomplete="username") }}
+    </div>
+    <div class="field">
+      {{ form.password.label }}
+      {{ form.password(placeholder="Contraseña", autocomplete="current-password") }}
+    </div>
+    <button class="btn solid" type="submit">Iniciar sesión</button>
+  </form>
+
+  <p class="auth-foot">
+    Acceso restringido. Las contraseñas se almacenan cifradas.<br>
+    Pide tus credenciales al administrador del sistema.
+  </p>
+</div>
+{% endblock %}

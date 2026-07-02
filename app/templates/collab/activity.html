@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Actividad{% endblock %}
+{% set icons = {'login':'→','sheet':'▤','data':'✎','user':'◍','backup':'⛁','general':'•'} %}
+{% block content %}
+<div class="page-head">
+  <div class="ph-ic">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 12h4l2 6 4-14 2 8h6"/></svg>
+  </div>
+  <div>
+    <div class="eyebrow">En línea</div>
+    <h1>Actividad del equipo</h1>
+    <p>Quién creó, modificó o eliminó información, y los accesos al sistema. Se actualiza solo.</p>
+  </div>
+</div>
+
+<ul class="activity-list" id="activityFeed">
+  {% for e in entries %}
+  <li class="act act-{{ e.category }}">
+    <span class="act-ic">{{ icons.get(e.category, '•') }}</span>
+    <span class="act-main"><b>{{ e.username or '—' }}</b> {{ e.action }}</span>
+    <span class="act-time">{{ e.timestamp.strftime('%d/%m %H:%M') }}</span>
+  </li>
+  {% else %}
+  <li class="muted small" style="padding:14px">Aún no hay actividad registrada.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,17 @@
+# Configuración automática para desplegar en Render (https://render.com).
+# Con este archivo, en Render eliges "New > Blueprint", conectas tu repo y listo:
+# Render lee todo de aquí. También puedes hacerlo manual (ver DESPLIEGUE.md).
+services:
+  - type: web
+    name: valbio
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true        # Render genera una clave secreta segura
+      - key: ADMIN_PASSWORD
+        sync: false                # escribe aquí tu contraseña de admin al desplegar

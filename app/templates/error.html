@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Error {{ code }}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:480px;margin:60px auto;text-align:center">
+  <div class="card-b" style="padding:40px">
+    <div style="font-family:var(--mono);font-size:46px;font-weight:700;color:var(--accent-deep)">{{ code }}</div>
+    <p style="font-size:15px;margin:10px 0 20px">{{ message }}</p>
+    <a class="btn solid" href="{{ url_for('main.dashboard') }}">Volver al inicio</a>
+  </div>
+</div>
+{% endblock %}

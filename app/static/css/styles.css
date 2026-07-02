@@ -1,0 +1,342 @@
+/* =========================================================================
+   Resultados de Validación — sistema de diseño
+   Concepto: lectura de instrumento de laboratorio. Estructura de precisión
+   (líneas finas), tipografía monoespaciada tabular para TODO dato numérico,
+   y color regulatorio para el dictamen (CUMPLE / NO CUMPLE).
+   ========================================================================= */
+:root{
+  --petrol:#0b3a48; --petrol-2:#0d4858; --ink:#16323b; --ink-soft:#5d7882;
+  --line:#dbe6ea; --line-soft:#eaf1f3; --panel:#ffffff; --bg:#eef3f5;
+  --accent:#13a0c4; --accent-deep:#0c6e8a;
+  --ok:#127c3a; --ok-bg:#e7f6ec; --bad:#bf3b2f; --bad-bg:#fcecea;
+  --warn:#9a6a05; --warn-bg:#fcf3e0;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',ui-monospace,'Cascadia Code',Consolas,monospace;
+  --radius:12px; --shadow:0 1px 2px rgba(11,58,72,.05),0 6px 20px rgba(11,58,72,.05);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-deep);text-decoration:none}
+h1,h2,h3{margin:0;font-weight:650;letter-spacing:-.01em;color:var(--petrol)}
+small{font-weight:400}
+
+/* ---- barra superior ---- */
+.topbar{display:flex;align-items:center;gap:20px;height:58px;padding:0 22px;
+  background:var(--petrol);color:#dcebef0;position:sticky;top:0;z-index:30}
+.brand{display:flex;align-items:center;gap:11px;color:#fff}
+.brand-mark{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff}
+.brand-mark svg{width:18px;height:18px}
+.brand-text{display:flex;flex-direction:column;font-weight:700;line-height:1.05;font-size:15px}
+.brand-text small{font-size:10.5px;color:#9ec6d2;font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+.topnav{display:flex;gap:4px;margin-left:8px}
+.topnav a{color:#bcdbe3;padding:7px 12px;border-radius:8px;font-size:13px;font-weight:500}
+.topnav a:hover{background:rgba(255,255,255,.09);color:#fff}
+.userbox{margin-left:auto;display:flex;align-items:center;gap:12px}
+.userchip{display:flex;flex-direction:column;line-height:1.15;text-align:right;font-size:12px;color:#cfe6ec}
+.userchip em{font-style:normal;font-size:10.5px;color:#8fbac6}
+
+/* ---- botones ---- */
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);
+  background:var(--panel);color:var(--ink);border-radius:9px;padding:8px 14px;
+  font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:.12s}
+.btn:hover{border-color:var(--accent);color:var(--accent-deep)}
+.btn.solid{background:var(--accent-deep);border-color:var(--accent-deep);color:#fff}
+.btn.solid:hover{background:var(--petrol);border-color:var(--petrol);color:#fff}
+.btn.ghost{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.22);color:#eaf6f9}
+.btn.ghost:hover{background:rgba(255,255,255,.16);color:#fff}
+.btn.danger{border-color:#e7b7b1;color:var(--bad);background:#fff}
+.btn.danger:hover{background:var(--bad-bg)}
+.btn.sm{padding:6px 11px;font-size:12px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* ---- layout de página ---- */
+.page{max-width:1120px;margin:0 auto;padding:26px 22px 60px}
+.page-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:22px}
+.page-head .ph-ic{width:42px;height:42px;flex:none;border-radius:11px;display:grid;place-items:center;
+  background:#e4eef1;color:var(--petrol)}
+.page-head .ph-ic svg{width:22px;height:22px}
+.page-head h1{font-size:22px}
+.page-head p{margin:3px 0 0;color:var(--ink-soft);font-size:13.5px;max-width:62ch}
+.page-head .ph-actions{margin-left:auto;display:flex;gap:9px;align-items:center}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--accent-deep)}
+
+/* ---- tarjetas ---- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-h{display:flex;align-items:center;gap:10px;padding:13px 17px;border-bottom:1px solid var(--line-soft)}
+.card-h h3{font-size:14.5px}
+.card-h .spacer{flex:1}
+.card-b{padding:16px 17px}
+.section-title{display:flex;align-items:center;gap:10px;margin:24px 0 12px}
+.section-title .eyebrow{white-space:nowrap}
+.section-title .rule{height:1px;flex:1;background:var(--line)}
+
+/* ---- formularios ---- */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.field label{font-size:12px;font-weight:600;color:var(--ink-soft)}
+.field input,.field select{border:1px solid var(--line);border-radius:9px;padding:9px 11px;
+  font-size:14px;font-family:var(--sans);color:var(--ink);background:#fff;width:100%}
+.field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+.grid-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.inline-form{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+
+/* ---- avisos / flashes ---- */
+.flashes{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.flash{padding:11px 15px;border-radius:10px;font-size:13px;border:1px solid transparent}
+.flash-success{background:var(--ok-bg);border-color:#bfe3c9;color:var(--ok)}
+.flash-error{background:var(--bad-bg);border-color:#eec4bf;color:var(--bad)}
+.flash-info{background:#e6f4f8;border-color:#bfe0ea;color:var(--accent-deep)}
+.notice{display:flex;gap:11px;padding:13px 15px;border-radius:11px;background:#eef6f8;
+  border:1px solid #cfe6ed;border-left:3px solid var(--accent);font-size:13px;color:var(--ink);margin-bottom:18px}
+.notice svg{width:18px;height:18px;flex:none;color:var(--accent-deep);margin-top:1px}
+
+/* ---- tablas tipo hoja de cálculo / instrumento ---- */
+.tbl-wrap{overflow-x:auto;border:1.5px solid var(--grid-strong,#8fa4ac);border-radius:6px}
+table.grid{border-collapse:collapse;width:100%;font-size:13px;background:#fff}
+table.grid th,table.grid td{border:1px solid var(--grid-line,#b7c6cd);padding:0;
+  text-align:center;white-space:nowrap}
+table.grid thead th{background:#fff;color:var(--ink);font-weight:700;text-align:center;
+  padding:8px 10px;border-bottom:1.5px solid var(--grid-strong,#8fa4ac)}
+table.grid td.rowlab,table.grid th.rowlab{background:#fbfcfd;text-align:left;font-weight:700;
+  color:var(--ink);padding:8px 12px;min-width:150px}
+table.grid td.band{background:#eef2f4;color:var(--petrol);font-weight:700;font-size:10.5px;
+  letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;text-align:center}
+table.grid input{width:100%;min-width:78px;border:none;background:transparent;text-align:center;
+  padding:8px 7px;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink)}
+table.grid input:focus{outline:2px solid var(--accent);outline-offset:-2px;background:#fffef3}
+table.grid tfoot td{background:#fbfcfd;font-weight:700;color:var(--ink)}
+table.grid tfoot tr:first-child td{border-top:1.5px solid var(--grid-strong,#8fa4ac)}
+.out,.num{font-family:var(--mono);font-variant-numeric:tabular-nums;padding:8px 9px;color:var(--ink)}
+.is-ok{background:var(--ok-bg)!important;color:var(--ok)}
+.is-bad{background:var(--bad-bg)!important;color:var(--bad)}
+.is-warn{background:var(--warn-bg)!important;color:var(--warn)}
+
+/* ---- etiquetas de dictamen ---- */
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
+  padding:3px 9px;border-radius:999px;letter-spacing:.02em}
+.tag.ok{background:var(--ok-bg);color:var(--ok)} .tag.bad{background:var(--bad-bg);color:var(--bad)}
+.tag.warn{background:var(--warn-bg);color:var(--warn)} .tag.neu{background:#eef2f4;color:var(--ink-soft)}
+
+/* ---- tira de fórmulas ---- */
+.fx{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:11px 14px;
+  background:#f3f9fb;border:1px solid #d4e7ed;border-left:3px solid var(--accent);
+  border-radius:10px;margin-bottom:16px;font-size:12px}
+.fx b{color:var(--petrol)} .fx code{font-family:var(--mono);font-size:11.5px;background:#fff;
+  border:1px solid #dbeaef;color:var(--accent-deep);padding:3px 8px;border-radius:6px}
+
+/* ---- login ---- */
+.auth-wrap{min-height:100vh;display:grid;place-items:center;
+  background:radial-gradient(1100px 600px at 50% -10%, #15485a 0%, #0b3a48 55%, #082a35 100%)}
+.auth-card{width:min(94vw,400px);background:var(--panel);border-radius:18px;padding:32px;
+  box-shadow:0 26px 60px rgba(0,0,0,.32)}
+.auth-card .brand-mark{width:46px;height:46px;margin-bottom:16px}
+.auth-card .brand-mark svg{width:26px;height:26px}
+.auth-card h1{font-size:21px} .auth-card .sub{color:var(--ink-soft);margin:2px 0 22px;font-size:13px}
+.auth-card .btn.solid{width:100%;justify-content:center;padding:11px;margin-top:4px}
+.auth-foot{margin-top:18px;font-size:11.5px;color:var(--ink-soft);text-align:center;line-height:1.5}
+
+/* ---- panel de hojas (dashboard) ---- */
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+  border-radius:10px;padding:9px 13px;flex:1;min-width:240px;max-width:440px}
+.search svg{width:17px;height:17px;color:var(--ink-soft)} .search input{border:none;outline:none;width:100%;font-size:14px;background:transparent}
+.search:focus-within{border-color:var(--accent);box-shadow:0 0 0 2px rgba(19,160,196,.14)}
+.docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:15px}
+.doc{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:11px}
+.doc .doc-top{display:flex;align-items:flex-start;gap:11px}
+.doc .doc-ic{width:34px;height:34px;flex:none;border-radius:9px;background:#e4eef1;color:var(--petrol);
+  display:grid;place-items:center}.doc .doc-ic svg{width:19px;height:19px}
+.doc .doc-mol{font-size:15px;font-weight:650;color:var(--petrol)}
+.doc .doc-cod{font-size:12px;color:var(--ink-soft);margin-top:2px}
+.doc .doc-meta{display:flex;flex-wrap:wrap;gap:3px 14px;font-size:11.5px;color:var(--ink-soft);
+  border-top:1px solid var(--line-soft);padding-top:9px}
+.doc .doc-meta b{color:var(--petrol);font-weight:600;font-family:var(--mono)}
+.doc-actions{display:flex;gap:8px;margin-top:auto}
+.empty{grid-column:1/-1;text-align:center;color:var(--ink-soft);padding:50px 20px;
+  border:1.5px dashed var(--line);border-radius:14px;background:#fafcfd}
+.empty svg{width:46px;height:46px;color:#b6cfd7;margin-bottom:8px}
+
+/* ---- menú de módulos ---- */
+.modules{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:14px}
+.mod{display:block;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;box-shadow:var(--shadow);transition:.13s}
+.mod:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 8px 24px rgba(11,58,72,.1)}
+.mod .mod-ic{width:36px;height:36px;border-radius:9px;background:#e4eef1;color:var(--petrol);
+  display:grid;place-items:center;margin-bottom:11px}.mod .mod-ic svg{width:20px;height:20px}
+.mod h4{margin:0 0 4px;font-size:14px;color:var(--petrol)} .mod p{margin:0;font-size:12px;color:var(--ink-soft)}
+
+/* ---- barra de hoja activa ---- */
+.sheet-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:13px 17px;margin-bottom:16px;background:linear-gradient(#f1f8fa,#e9f3f6);
+  border:1px solid #d3e6ec;border-left:3px solid var(--petrol);border-radius:12px}
+.sheet-bar .sb-lab{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);font-weight:600}
+.sheet-bar .sb-name{font-size:16px;font-weight:700;color:var(--petrol)}
+
+/* ---- decimales ---- */
+.dec{display:flex;align-items:center;gap:6px}
+.dec .dec-btn{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:#fff;
+  color:var(--petrol);font-size:16px;cursor:pointer;display:grid;place-items:center;padding:0}
+.dec .dec-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.dec .dec-val{min-width:20px;text-align:center;font-weight:700;font-family:var(--mono)}
+
+.result-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 15px;border-radius:10px;
+  background:#f7fafb;border:1px solid var(--line);font-size:13px;margin-top:13px}
+.kv{display:inline-flex;flex-direction:column;gap:1px;padding-right:18px}
+.kv .k{font-size:10.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em}
+.kv .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;color:var(--petrol);font-size:15px}
+.muted{color:var(--ink-soft)} .small{font-size:12px}
+.row-actions{display:flex;gap:8px;margin:12px 0}
+
+@media (max-width:680px){
+  .topnav{display:none}.page-head .ph-actions{margin-left:0;width:100%}
+  .userchip{display:none}
+}
+
+/* ---- presencia (quién está en línea) ---- */
+.presence{position:relative}
+.presence-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.2);color:#dcebef;border-radius:999px;padding:5px 11px;
+  font-size:12px;font-weight:600;cursor:pointer}
+.presence-btn:hover{background:rgba(255,255,255,.16)}
+.dot{width:8px;height:8px;border-radius:50%;background:#34d17e;display:inline-block;
+  box-shadow:0 0 0 3px rgba(52,209,126,.22)}
+.presence-pop{position:absolute;right:0;top:38px;background:#fff;border:1px solid var(--line);
+  border-radius:12px;box-shadow:0 16px 40px rgba(11,58,72,.22);width:230px;padding:8px;z-index:40}
+.presence-h{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);
+  font-weight:700;padding:6px 8px}
+.presence-pop ul{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto}
+.presence-pop li{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;font-size:13px;color:var(--ink)}
+.presence-pop li:hover{background:var(--line-soft)}
+.presence-pop li .role{margin-left:auto;font-size:10.5px;color:var(--ink-soft)}
+.presence-pop li em{color:var(--accent-deep);font-style:normal;font-size:11px}
+
+/* ---- lista de actividad ---- */
+.activity-list{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;background:var(--panel);box-shadow:var(--shadow)}
+.act{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line-soft);font-size:13.5px}
+.act:last-child{border-bottom:none}
+.act-ic{width:28px;height:28px;flex:none;border-radius:8px;display:grid;place-items:center;
+  background:#eef4f6;color:var(--petrol);font-size:14px;font-weight:700}
+.act-main{flex:1;color:var(--ink)}.act-main b{color:var(--petrol)}
+.act-time{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);white-space:nowrap}
+.act-login .act-ic{background:#e7f0fb;color:#2c5d9a}
+.act-sheet .act-ic{background:#e4eef1;color:var(--petrol)}
+.act-data .act-ic{background:var(--ok-bg);color:var(--ok)}
+.act-user .act-ic{background:#f1ecf8;color:#6b4ea0}
+.act-backup .act-ic{background:var(--warn-bg);color:var(--warn)}
+
+/* ---- barra de hoja: lado derecho + info de edición ---- */
+.edit-info{font-size:12px;color:var(--ink-soft)}.edit-info b{color:var(--petrol)}
+.tag .dot{width:7px;height:7px;box-shadow:none;margin-right:1px}
+
+/* ---- controles de filas/columnas (+/-) ---- */
+.sizer{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px}
+.sz-group{display:inline-flex;align-items:center;gap:8px;background:var(--panel);
+  border:1px solid var(--line);border-radius:999px;padding:4px 6px}
+.sz-lab{font-size:12.5px;color:var(--ink-soft);padding:0 2px}.sz-lab b{color:var(--petrol)}
+.szbtn{width:26px;height:26px;border:1px solid var(--line);background:#fff;color:var(--petrol);
+  border-radius:7px;font-size:16px;font-weight:700;line-height:1;cursor:pointer;display:grid;place-items:center}
+.szbtn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ---- tabla personalizada (libre) ---- */
+.free-table{margin:0 0 22px;border:1px solid var(--line);border-radius:12px;
+  background:var(--panel);box-shadow:var(--shadow);padding:14px}
+.ft-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ft-title{flex:1;font-size:15px;font-weight:700;color:var(--petrol);border:1px solid transparent;
+  background:transparent;border-radius:8px;padding:6px 8px}
+.ft-title:hover,.ft-title:focus{border-color:var(--line);background:#fff;outline:none}
+.free-grid input{width:100%;border:1px solid var(--line);border-radius:6px;padding:6px 7px;
+  font-family:var(--mono);font-size:13px;background:#fff}
+.free-grid input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.free-grid .ft-h{font-family:inherit;font-weight:600;color:var(--ink)}
+.free-grid thead th{position:relative}
+.ft-x{border:none;background:transparent;color:var(--bad);font-size:15px;font-weight:700;
+  cursor:pointer;padding:0 2px;line-height:1}
+.ft-x:hover{color:#fff;background:var(--bad);border-radius:5px}
+.ft-add{width:42px;text-align:center}
+
+/* ---- barra de importación de la tabla libre ---- */
+.free-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 14px}
+
+/* ---- informe imprimible ---- */
+.report-sheet{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  box-shadow:var(--shadow);padding:26px}
+.rep-head h2{margin:0 0 6px;color:var(--petrol);font-size:18px}
+.rep-meta{display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;color:var(--ink-soft);
+  border-bottom:2px solid var(--line);padding-bottom:14px;margin-bottom:4px}
+.rep-meta b{color:var(--ink)}
+.rep-sec{margin-top:22px;page-break-inside:avoid}
+.rep-sec h3{color:var(--petrol);font-size:14px;border-left:3px solid var(--accent);
+  padding-left:10px;margin:0 0 10px}
+.rep-kv{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--ink);margin:8px 0 2px}
+.rep-kv em{color:var(--ink-soft);font-style:normal;margin-right:4px}
+
+@media print{
+  .topbar,.no-print,.flashes{display:none !important}
+  body{background:#fff}
+  .page{padding:0;max-width:none}
+  .report-sheet{border:none;box-shadow:none;border-radius:0;padding:0}
+  .grid{font-size:10px}
+  .rep-sec{page-break-inside:avoid}
+  a[href]::after{content:""}
+}
+.rep-cap{font-size:11px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  color:var(--ink-soft);margin:12px 0 6px}
+
+/* ---- asistente de importación (modal) ---- */
+.modal-ov{position:fixed;inset:0;background:rgba(11,58,72,.45);display:flex;
+  align-items:flex-start;justify-content:center;padding:40px 16px;z-index:100;overflow:auto}
+.modal{background:#fff;border-radius:14px;box-shadow:0 24px 60px rgba(11,58,72,.35);
+  width:100%;max-width:640px;overflow:hidden}
+.modal-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;
+  border-bottom:1px solid var(--line);background:var(--panel-2,#f3f7f8)}
+.modal-h h3{margin:0;color:var(--petrol);font-size:15px}
+.modal-x{border:none;background:transparent;font-size:22px;line-height:1;color:var(--ink-soft);cursor:pointer}
+.modal-x:hover{color:var(--bad)}
+.modal-b{padding:20px;max-height:64vh;overflow:auto}
+.modal-f{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--line)}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink);margin:12px 0}
+.imp-prev{border:1px solid var(--line);border-radius:8px;overflow:auto;margin:6px 0 14px;max-height:200px}
+.imp-grid{font-size:11px;margin:0}.imp-grid td{padding:4px 8px;white-space:nowrap}
+.imp-hd{background:var(--line-soft);font-weight:700;color:var(--petrol)}
+.imp-fields,.imp-levels{display:grid;gap:12px}
+.imp-fields{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.imp-level{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--panel)}
+.imp-level-h{font-weight:600;color:var(--petrol);font-size:12.5px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.imp-level .field{margin-bottom:8px}
+.imp-map .field label{font-size:12px}
+
+/* ---- encabezado de módulo estilo Excel (título + molécula/código/fecha) ---- */
+.xl-sheet{border:1.5px solid var(--grid-strong,#8fa4ac);border-radius:6px;overflow:hidden;
+  margin:0 0 8px;background:#fff}
+.xl-title{text-align:center;font-weight:800;letter-spacing:.05em;color:var(--ink);
+  font-size:15px;padding:9px 12px;border-bottom:1.5px solid var(--grid-strong,#8fa4ac);text-transform:uppercase}
+table.xl-info{width:100%;border-collapse:collapse;font-size:13px}
+table.xl-info td{border:1px solid var(--grid-line,#b7c6cd);padding:6px 12px}
+table.xl-info tr td:first-child{border-left:none}
+table.xl-info tr td:last-child{border-right:none}
+table.xl-info tr:last-child td{border-bottom:none}
+table.xl-info td.k{font-weight:700;color:var(--ink);background:#fbfcfd;white-space:nowrap;text-align:right;width:130px}
+table.xl-info td.v{color:var(--ink);font-family:var(--mono)}
+.sheet-note{display:flex;justify-content:flex-end;gap:14px;flex-wrap:wrap;margin:0 0 14px;
+  font-size:12px;color:var(--ink-soft)}
+.sheet-note b{color:var(--petrol)}
+.imp-sheets{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px 14px;
+  border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.imp-sheets .chk{margin:0;font-size:12.5px}
+
+/* ---- niveles con nombre + subtítulo de condición (módulos estadísticos) ---- */
+table.grid thead th input.lvlname,table.grid thead th input.nomhd{
+  width:100%;min-width:70px;border:none;background:transparent;text-align:center;
+  font-weight:700;color:var(--ink);font-family:var(--mono);font-size:12.5px;padding:6px 6px}
+table.grid thead th input.lvlname{font-family:inherit;text-transform:uppercase;letter-spacing:.02em}
+table.grid thead th input:focus{outline:2px solid var(--accent);outline-offset:-2px;background:#fffef3}
+.st-sub{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+.st-sub label{font-weight:700;color:var(--petrol);font-size:12.5px;white-space:nowrap}
+.st-sub input{flex:1;max-width:420px;border:1px solid var(--grid-strong,#8fa4ac);border-radius:6px;
+  padding:8px 12px;font-size:13px;text-align:center;font-weight:700;color:var(--ink);
+  text-transform:uppercase;letter-spacing:.03em;background:#fff}
+.st-sub input:focus{outline:2px solid var(--accent);outline-offset:-1px}
